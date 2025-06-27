@@ -1,0 +1,9 @@
+PyMuPDF
+python-dateutil
+langchain_google_genai
+langchain-groq
+chromadb
+langchain
+sentence-transformers[onnx]
+rank_bm25
+langchain_community
