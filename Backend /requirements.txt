@@ -7,3 +7,5 @@ langchain
 sentence-transformers[onnx]
 rank_bm25
 langchain_community
+fastapi
+uvicorn
