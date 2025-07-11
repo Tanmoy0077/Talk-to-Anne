@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+  --primary-font: 'Poppins', sans-serif;
+  --secondary-font: 'Lora', serif;
+
+  --bg-color: #FDF8F0;
+  /* A warm, paper-like off-white */
+  --text-color: #402E32;
+  /* A dark, earthy brown */
+  --primary-accent: #A85C48;
+  /* A muted, warm terracotta */
+  --secondary-accent: #607B7D;
+  /* A calm, muted teal */
+
+  --anne-bubble-bg: #EAE0D5;
+  --user-bubble-bg: #C6D8D3;
+}
+
+body {
+  margin: 0;
+  font-family: var(--primary-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+* {
+  box-sizing: border-box;
+}

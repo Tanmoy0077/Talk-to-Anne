@@ -1,0 +1,214 @@
+/* General page container */
+.landing-page {
+    width: 100%;
+}
+
+/* ===== Hero Section (Existing styles with minor adjustments) ===== */
+.landing-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    /* Give the hero section height */
+    padding: 4rem 2rem;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.landing-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4rem;
+    max-width: 1100px;
+    width: 100%;
+}
+
+.landing-image-container {
+    flex: 1;
+    max-width: 350px;
+}
+
+.landing-image {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: rotate(-3deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+.landing-image:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+
+.landing-text-container {
+    flex: 2;
+}
+
+.landing-headline {
+    font-family: var(--secondary-font);
+    font-size: 3.5rem;
+    color: var(--primary-accent);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.landing-subheading {
+    font-family: var(--secondary-font);
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--text-color);
+    margin-top: 0;
+    opacity: 0.8;
+}
+
+.landing-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--primary-accent);
+    color: var(--bg-color);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(168, 92, 72, 0.3);
+}
+
+.cta-button:hover {
+    background-color: #934a37;
+    transform: translateY(-3px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== General Section Styling ===== */
+.section-title {
+    text-align: center;
+    font-family: var(--secondary-font);
+    font-size: 2.8rem;
+    color: var(--text-color);
+    margin-bottom: 3rem;
+    font-weight: 700;
+}
+
+/* ===== Features Section ===== */
+.features-section {
+    padding: 6rem 2rem;
+    background-color: #f8f3eb;
+    /* A slightly different shade for contrast */
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 4px solid var(--secondary-accent);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card h3 {
+    font-family: var(--primary-font);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-accent);
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.feature-card p {
+    line-height: 1.6;
+    color: #555;
+}
+
+/* ===== About Section ===== */
+.about-section {
+    padding: 6rem 2rem;
+    background-color: var(--bg-color);
+    /* Back to the main background color */
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.15rem;
+    line-height: 1.8;
+}
+
+.about-content p {
+    margin-bottom: 1.5rem;
+}
+
+.disclaimer {
+    margin-top: 2rem;
+    font-size: 1rem;
+    font-style: italic;
+    opacity: 0.9;
+    color: #666;
+}
+
+/* ===== Footer ===== */
+.landing-footer {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    text-align: center;
+    padding: 1.5rem 2rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 768px) {
+    .landing-content {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem 1rem;
+        text-align: center;
+    }
+
+    .landing-headline {
+        font-size: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+
+    .features-section,
+    .about-section {
+        padding: 4rem 1.5rem;
+    }
+}

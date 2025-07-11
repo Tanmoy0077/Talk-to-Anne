@@ -1,0 +1,97 @@
+.app-header {
+    background: rgba(253, 248, 240, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 1rem 5%;
+    border-bottom: 1px solid #EAE0D5;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    /* Set a fixed height for consistent offset calculation */
+}
+
+.logo-link {
+    text-decoration: none;
+}
+
+.logo-text {
+    font-family: var(--secondary-font);
+    font-weight: 700;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.logo-link:hover .logo-text {
+    color: var(--primary-accent);
+}
+
+/* New Navigation Styles */
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.main-nav a {
+    font-family: var(--primary-font);
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+    color: var(--primary-accent);
+}
+
+/* Underline effect for nav links */
+.main-nav a:not(.nav-cta-button)::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--primary-accent);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+
+.main-nav a:not(.nav-cta-button):hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.nav-cta-button {
+    background-color: var(--secondary-accent);
+    color: #fff !important;
+    /* Use !important to override default link color */
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-cta-button:hover {
+    background-color: #4a6163;
+    transform: translateY(-2px);
+    color: #fff !important;
+    /* Keep text color white on hover */
+}
+
+/* Hide nav on smaller screens for a future mobile menu */
+@media (max-width: 768px) {
+    .main-nav {
+        display: none;
+        /* In a real project, you would replace this with a hamburger menu icon */
+    }
+}
