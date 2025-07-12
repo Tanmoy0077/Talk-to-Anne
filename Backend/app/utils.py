@@ -17,11 +17,11 @@ google_api_key = os.getenv("GOOGLE_API_KEY")
 e_model = SentenceTransformer("all-MiniLM-L6-v2", backend="onnx")
 ranking_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L6-v2", backend="onnx")
 
-client = chromadb.PersistentClient(path="anne-diary-db")
+client = chromadb.PersistentClient(path="app/anne-diary-db")
 collection = client.get_collection(name="anne-diary")
 
 
-with open("models/bm25_docs.pkl", "rb") as f:
+with open("app/models/bm25_docs.pkl", "rb") as f:
     loaded_docs = pickle.load(f)
 
 

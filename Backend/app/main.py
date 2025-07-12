@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi import Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -7,8 +8,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 from app.utils import (
-    get_semantic_retriever,
-    get_bm25_retriever,
+    get_aggregated_query,
     generate_response,
     get_ranked_results,
 )
@@ -40,7 +40,9 @@ app.mount(
 
 
 class ChatRequest(BaseModel):
+    queries: str
     query: str
+
 
 
 @app.get("/")
@@ -57,11 +59,14 @@ async def catch_all(full_path: str):
 
 
 @app.post("/api/chat")
-async def search(request: ChatRequest):
-    vector_docs = get_semantic_retriever(request.query)
-    bm25_results = get_bm25_retriever(request.query)
-    combined_text = get_ranked_results(vector_docs, bm25_results, request.query)
-    response = generate_response(request.query, combined_text)
+async def search(request: ChatRequest= Body(...)):
+    # vector_docs = get_semantic_retriever(request.query)
+    # bm25_results = get_bm25_retriever(request.query)
+    # print("Received queries:", request.queries)
+    # print("Received query:", request.query)
+    structured_query= get_aggregated_query(request.queries, request.query)
+    combined_text = get_ranked_results(structured_query)
+    response = generate_response(structured_query, combined_text)
     return {"response": response.content}
 
 

@@ -28,30 +28,51 @@ const ChatPage: React.FC = () => {
     }
   }, [messages, isTyping]);
 
+
+  const [userQuestions, setUserQuestions] = useState<Message[]>([]);
+
+
   const handleSendMessage = async (e: FormEvent) => {
     e.preventDefault();
     const trimmedInput = inputValue.trim();
     if (trimmedInput === "") return;
 
+
     const newUserMessage: Message = {
-      id: Date.now(),
+      id: Math.random() * 100,
       text: trimmedInput,
       sender: "user",
     };
+    // console.log(newUserMessage)
     setMessages((prev) => [...prev, newUserMessage]);
+
+
+    const previousQuestionsString = userQuestions
+      .map((msg, index) => `${index + 1}. ${msg.text}`)
+      .join("\n");
+
     setInputValue("");
     setIsTyping(true);
 
-    // Get response from the API
-    const anneResponseText = await getAnneResponse(trimmedInput);
+
+    const anneResponseText = await getAnneResponse(
+      previousQuestionsString,
+      trimmedInput
+    );
+
+
+    setUserQuestions((prev) => [...prev, newUserMessage]);
+
     const newAnneMessage: Message = {
       id: newUserMessage.id + 1,
       text: anneResponseText,
       sender: "anne",
     };
+    // console.log(newAnneMessage)
     setMessages((prev) => [...prev, newAnneMessage]);
     setIsTyping(false);
   };
+
 
   return (
     <div className="chat-page-container">

@@ -1,17 +1,27 @@
-const API_ENDPOINT = "http://localhost:8000/api/chat";
+const API_ENDPOINT = "/api/chat";
 
 const defaultErrorResponse =
   "I'm sorry, I seem to be offline at the moment. Please try again later.";
 
-export const getAnneResponse = async (userInput: string): Promise<string> => {
+export const getAnneResponse = async (
+  previousQuestions: string,
+  currentQuestion: string
+): Promise<string> => {
+  // console.log(previousQuestions)
+  // console.log(currentQuestion)
   try {
     const response = await fetch(API_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query: userInput }),
+      body: JSON.stringify({
+        queries: previousQuestions,
+        query: currentQuestion,
+      }),
     });
+
+    // console.log("Raw response:", response);
 
     if (!response.ok) {
       console.error("API Error:", response.status, response.statusText);
