@@ -1,5 +1,6 @@
 trial.py
 talk_to_anne.py
+trial_agg_query.py
 documents/
 *-db/
 # Byte-compiled / optimized / DLL files

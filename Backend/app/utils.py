@@ -4,22 +4,102 @@ from langchain.schema import Document
 import pickle
 from langchain_community.retrievers import BM25Retriever
 from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.output_parsers import JsonOutputParser
 import os
 from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
 
 load_dotenv()
-api_key = os.getenv("GROQ_API_KEY")
+groq_api_key = os.getenv("GROQ_API_KEY")
+google_api_key = os.getenv("GOOGLE_API_KEY")
 
 e_model = SentenceTransformer("all-MiniLM-L6-v2", backend="onnx")
 ranking_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L6-v2", backend="onnx")
 
-client = chromadb.PersistentClient(path="app/anne-diary-db")
+client = chromadb.PersistentClient(path="anne-diary-db")
 collection = client.get_collection(name="anne-diary")
 
 
-with open("app/models/bm25_docs.pkl", "rb") as f:
+with open("models/bm25_docs.pkl", "rb") as f:
     loaded_docs = pickle.load(f)
+
+
+
+def get_aggregated_query(queries: str, current_question: str):
+    """
+    Get the restructured query from the previous queries and current question.
+    """
+    parser = JsonOutputParser()
+    format_instructions = parser.get_format_instructions()
+
+    prompt = PromptTemplate(
+        template="""
+        You are given a list of previously asked questions and a recently asked question. Your task is to analyze and combine all questions into a single, concise, and coherent question that captures the full intent and context provided across them.
+
+        The final question should preserve the core meaning of each input question.
+
+        Use pronoun resolution to replace ambiguous references like "this", "that" or "it" with the correct noun.
+
+        Assume all questions are about the same underlying subject unless otherwise stated.
+
+        Return the aggregated question in a JSON format with the key "aggregated_question". Do not give extra information.
+
+        If the the recently asked question is of different subject then, return the recently asked question as it is in the "aggregated_question".
+
+        Please follow instructions and give response in exact format without extra commentry.
+        Format:
+
+        {{
+            "aggregated_question": "The aggregated question"
+        }}
+
+        Example Inputs:
+
+        **Previously Asked Questions**
+        1. Who is Peter?
+
+        **Recently Asked Question**
+        How did you meet him?
+
+        **Output**:
+        {{
+            "aggregated_question": "How did you meet Peter"
+        }}
+
+
+        **Previously Asked Questions**
+        1.Where did Anne Frank hide during the war?
+        2.Who was hiding with her?
+
+        **Recently Asked Question**
+        How long did they stay there?
+
+        **Output**:
+        {{
+            "aggregated_question": "How long were you hiding in the place where you stayed during the war?"
+        }}
+
+        **Previously Asked Questions**
+        {previous_questions}
+
+        **Recently Asked Question**
+        {current_question}
+
+        **Final Answer**
+        """,
+        input_variables=["previous_questions", "current_question"],
+        partial_variables={"format_instructions": format_instructions}
+    )
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-preview-04-17", temperature=0.2, api_key=google_api_key)
+
+    chain = prompt | llm | parser
+    response = chain.invoke(
+        {"previous_questions": queries, "current_question": current_question}
+    )
+    result = response["aggregated_question"] if response.get("aggregated_question") else current_question
+
+    return result
 
 
 def get_semantic_retriever(query):
@@ -47,7 +127,10 @@ def get_bm25_retriever(query):
     return bm25_results
 
 
-def get_ranked_results(vector_docs, bm25_results, query):
+def get_ranked_results(query):
+
+    vector_docs = get_semantic_retriever(query)
+    bm25_results = get_bm25_retriever(query)
     # Now combine safely
     combined_docs = bm25_results + vector_docs  # ✅ no error
 
@@ -68,7 +151,6 @@ def get_ranked_results(vector_docs, bm25_results, query):
         [f"Entry {i + 1}:\n {doc}" for i, doc in enumerate(top_5_chunks)]
     )
     return combined_text
-
 
 def generate_response(query, entries):
     prompt = PromptTemplate(
@@ -104,7 +186,7 @@ and try to offer any feeling or thought you *do* remember. If appropriate, invit
 """,
     )
 
-    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.2, api_key=api_key)
+    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.2, api_key=groq_api_key)
 
     chain = prompt | llm
     response = chain.invoke({"user_query": query, "entries": entries})
@@ -113,9 +195,12 @@ and try to offer any feeling or thought you *do* remember. If appropriate, invit
 
 
 if __name__ == "__main__":
-    query = "Anne feels anxious about the war"
-    vector_docs = get_semantic_retriever(query)
-    bm25_results = get_bm25_retriever(query)
-    combined_text = get_ranked_results(vector_docs, bm25_results, query)
-    response = generate_response(query, combined_text)
+    query = "Do you feel anxious about it ?"
+    queries= "1. When did the war start?"
+    # vector_docs = get_semantic_retriever(query)
+    # bm25_results = get_bm25_retriever(query)
+    structured_query= get_aggregated_query(queries, query)
+    print(structured_query)
+    combined_text = get_ranked_results(structured_query)
+    response = generate_response(structured_query, combined_text)
     print(response.content)
