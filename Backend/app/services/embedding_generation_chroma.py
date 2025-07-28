@@ -11,7 +11,7 @@ api_key = os.getenv("GOOGLE_API_KEY")
 
 df = pd.read_csv("../../documents/diary_summary_output.csv")
 
-embedding_model=GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-exp-03-07", google_api_key=api_key)
+embedding_model=GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
 
 client = chromadb.PersistentClient(path="../../anne-diary-db")
 collection = client.get_or_create_collection(name="anne-diary")

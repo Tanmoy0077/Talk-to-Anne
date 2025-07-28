@@ -15,7 +15,7 @@ load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 google_api_key = os.getenv("GOOGLE_API_KEY")
 
-e_model=GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-exp-03-07", google_api_key=google_api_key)
+e_model=GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=google_api_key)
 ranking_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L6-v2", backend="onnx")
 
 client = chromadb.PersistentClient(path="app/anne-diary-db")
