@@ -1,12 +1,12 @@
-transformers[torch]
+torch==2.7.1 --index-url https://download.pytorch.org/whl/cpu
 PyMuPDF
 python-dateutil
-langchain_google_genai
+langchain-google-genai
 langchain-groq
 chromadb
 langchain
-sentence-transformers[onnx]
+sentence-transformers
 rank_bm25
-langchain_community
+langchain-community
 fastapi
 uvicorn
