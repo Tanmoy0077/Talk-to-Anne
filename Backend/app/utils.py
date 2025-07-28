@@ -1,11 +1,12 @@
 import chromadb
-from sentence_transformers import SentenceTransformer, CrossEncoder
+from sentence_transformers import CrossEncoder
 from langchain.schema import Document
 import pickle
 from langchain_community.retrievers import BM25Retriever
 from langchain_groq import ChatGroq
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import JsonOutputParser
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import os
 from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
@@ -14,7 +15,7 @@ load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 google_api_key = os.getenv("GOOGLE_API_KEY")
 
-e_model = SentenceTransformer("all-MiniLM-L6-v2", backend="onnx")
+e_model=GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-exp-03-07", google_api_key=google_api_key)
 ranking_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L6-v2", backend="onnx")
 
 client = chromadb.PersistentClient(path="app/anne-diary-db")
@@ -103,7 +104,8 @@ def get_aggregated_query(queries: str, current_question: str):
 
 
 def get_semantic_retriever(query):
-    query_embedding = e_model.encode(query)
+    query_embedding = e_model.embed_query(query)
+
 
     vector_results = collection.query(
         query_embeddings=[query_embedding],
