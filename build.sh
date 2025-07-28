@@ -8,4 +8,4 @@ npm run build
 cd ..
 
 echo "Installing backend dependencies..."
-pip install -r backend/requirements.txt
+pip install -r Backend/requirements.txt
